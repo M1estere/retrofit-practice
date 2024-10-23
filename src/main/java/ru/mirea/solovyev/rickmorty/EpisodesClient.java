@@ -17,8 +17,11 @@ public class EpisodesClient {
                 .build();
 
         EpisodeService episodeService = client.create(EpisodeService.class);
+        fetchEpisodes(episodeService, 2, null);
+    }
 
-        Response<Result> response = episodeService.getEpisodes(1).execute();
+    private static void fetchEpisodes(EpisodeService episodeService, int page, Episode maxCharactersEpisode) throws IOException {
+        Response<Result> response = episodeService.getEpisodes(page).execute();
         if (response.isSuccessful() == false || response.body() == null) {
             System.out.println("Ошибка: " + response.code());
             return;
@@ -26,19 +29,21 @@ public class EpisodesClient {
 
         Result result = response.body();
 
-        Episode maxCharactersEpisode = null;
-        int maxCharacters = 0;
         for (Episode episode : result.getResults()) {
             int charactersCount = episode.getCharacters().size();
 
-            if (charactersCount > maxCharacters) {
-                maxCharacters = charactersCount;
+            if (maxCharactersEpisode == null || charactersCount > maxCharactersEpisode.getCharacters().size()) {
                 maxCharactersEpisode = episode;
             }
         }
 
-        System.out.println("Max characters: " + maxCharacters);
-        System.out.println("Episode title: " + maxCharactersEpisode.getName());
+        if (page < response.body().getInfo().getPages()) {
+            fetchEpisodes(episodeService, page + 1, maxCharactersEpisode);
+        } else {
+            System.out.println("Episode ID: " + maxCharactersEpisode.getId());
+            System.out.println("Max characters: " + maxCharactersEpisode.getCharacters().size());
+            System.out.println("Title: " + maxCharactersEpisode.getName());
+        }
     }
 
 }
