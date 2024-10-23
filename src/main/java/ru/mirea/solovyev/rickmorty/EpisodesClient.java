@@ -17,7 +17,7 @@ public class EpisodesClient {
                 .build();
 
         EpisodeService episodeService = client.create(EpisodeService.class);
-        fetchEpisodes(episodeService, 2, null);
+        fetchEpisodes(episodeService, 1, null);
     }
 
     private static void fetchEpisodes(EpisodeService episodeService, int page, Episode maxCharactersEpisode) throws IOException {
