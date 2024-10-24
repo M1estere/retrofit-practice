@@ -9,10 +9,12 @@ import java.io.IOException;
 
 public class EpisodesClient {
 
+    private static final String BASE_URL = "https://rickandmortyapi.com/api/";
+
     public static void main(String[] args) throws IOException {
         Retrofit client = new Retrofit
                 .Builder()
-                .baseUrl("https://rickandmortyapi.com/api/")
+                .baseUrl(BASE_URL)
                 .addConverterFactory(JacksonConverterFactory.create(new JsonMapper()))
                 .build();
 
@@ -40,9 +42,7 @@ public class EpisodesClient {
         if (page < response.body().getInfo().getPages()) {
             fetchEpisodes(episodeService, page + 1, maxCharactersEpisode);
         } else {
-            System.out.println("Episode ID: " + maxCharactersEpisode.getId());
-            System.out.println("Max characters: " + maxCharactersEpisode.getCharacters().size());
-            System.out.println("Title: " + maxCharactersEpisode.getName());
+            System.out.println(maxCharactersEpisode);
         }
     }
 

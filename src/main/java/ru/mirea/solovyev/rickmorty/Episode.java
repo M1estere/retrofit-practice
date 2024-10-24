@@ -2,39 +2,20 @@ package ru.mirea.solovyev.rickmorty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Episode {
 
-    @JsonProperty
-    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonProperty("id")
     private int id;
 
-    @JsonProperty
-    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonProperty("name")
     private String name;
 
-    @JsonProperty
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private String air_date;
-
-    @JsonProperty
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private String episode;
-
-    @JsonProperty
-    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonProperty("characters")
     private List<String> characters;
-
-    @JsonProperty
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private String url;
-
-    @JsonProperty
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private String created;
 
     public int getId() {
         return id;
@@ -44,23 +25,12 @@ public class Episode {
         return name;
     }
 
-    public String getAirDate() {
-        return air_date;
-    }
-
-    public String getEpisode() {
-        return episode;
-    }
-
     public List<String> getCharacters() {
         return characters;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public String getCreated() {
-        return created;
+    @Override
+    public String toString() {
+        return String.format("ID: %d\nTitle: %s\nCharacters: %d", id, name, characters.size());
     }
 }

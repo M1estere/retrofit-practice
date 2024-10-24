@@ -9,7 +9,6 @@ public class Valute {
 
     @JacksonXmlProperty(localName = "ID", isAttribute = true)
     private String id;
-
     @JacksonXmlProperty(localName = "Name")
     private String name;
 
@@ -40,8 +39,7 @@ public class Valute {
         this.value = value;
     }
 
-    public Valute() {
-    }
+    public Valute() {  }
 
     @Override
     public String toString() {

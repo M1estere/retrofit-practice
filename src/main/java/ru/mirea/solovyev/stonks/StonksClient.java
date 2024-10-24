@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class StonksClient {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, SQLException {
         Retrofit client = new Retrofit
                 .Builder()
                 .baseUrl("https://www.cbr.ru")
@@ -22,32 +22,26 @@ public class StonksClient {
                 .build();
 
         StonksService stonksService = client.create(StonksService.class);
-        try {
-            Response<DailyCurs> response = stonksService
-                    .getDailyCurs(LocalDate.of(2003, 04, 16)
-                            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).execute();
+        Response<DailyCurs> response = stonksService
+                .getDailyCurs(LocalDate.of(2003, 04, 16)
+                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).execute();
 
-            DailyCurs dailyCurs = response.body();
+        DailyCurs dailyCurs = response.body();
 
-            Optional<Valute> maxValute = dailyCurs.getValutes().stream()
-                    .filter(valute -> !valute.getName().equals("СДР (специальные права заимствования)"))
-                    .max(Comparator.comparingDouble(Valute::getValue));
+        Optional<Valute> maxValute = dailyCurs.getValutes().stream()
+                .filter(valute -> !valute.getName().equals("СДР (специальные права заимствования)"))
+                .max(Comparator.comparingDouble(Valute::getValue));
 
-            DatabaseService databaseService = new DatabaseServiceImpl();
-            if(maxValute.isPresent()) {
-                System.out.println(maxValute.get());
+        DatabaseService databaseService = new DatabaseServiceImpl();
+        if (maxValute.isPresent()) {
+            System.out.println(maxValute.get());
 
-                Valute mv = maxValute.get();
+            Valute mv = maxValute.get();
 
-                databaseService.saveMaxValuteOfDate("соловьевиа", mv, LocalDate.now());
+            databaseService.saveMaxValuteOfDate("соловьевиа", mv, LocalDate.now());
 
-                Valute valute = databaseService.getValuteOfDate(LocalDate.now());
-                System.out.println(valute);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Valute valute = databaseService.getValuteOfDate(LocalDate.now());
+            System.out.println(valute);
         }
     }
 
